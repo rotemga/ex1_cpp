@@ -9,9 +9,9 @@ public:
 	OurSensor(const OurSensor&);//copy c'tor
 	OurSensor& operator=(const OurSensor&);// '=' operator
 	OurSensor& operator=(const AbstractSensor&);// '=' operator
-	char* ToString(const Direction);
 
 	virtual SensorInformation sense() const;
 	virtual SensorInformation setInfo(SensorInformation* Info);
 };
+
 
