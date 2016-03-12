@@ -2,6 +2,7 @@
 #include "AbstractSensor.h"
 class OurSensor : public AbstractSensor
 {
+	Position* sensorPos;
 	SensorInformation* sensorInfo;
 public:
 	OurSensor();
@@ -11,7 +12,8 @@ public:
 	OurSensor& operator=(const AbstractSensor&);// '=' operator
 
 	virtual SensorInformation sense() const;
-	virtual SensorInformation setInfo(SensorInformation* Info);
+	virtual SensorInformation setInfo(SensorInformation& Info);
+	void OurSensor::setPos(Position& pos);
 };
 
 
