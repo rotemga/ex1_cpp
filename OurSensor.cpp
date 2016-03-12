@@ -18,7 +18,7 @@ OurSensor::OurSensor(const OurSensor& sensor2) {//copy c'tor
 
 OurSensor& OurSensor::operator=(const OurSensor& sensor2) {// '=' operator
 	if (this != &sensor2) {
-		setInfo(sensor2.sensorInfo);
+		setInfo(*sensor2.sensorInfo);
 	}
 	return *this;
 }
@@ -32,10 +32,10 @@ Sensor& Sensor::operator=(const AbstractSensor& sensor2){// '=' operator
 
 
 
-SensorInformation OurSensor::setInfo(SensorInformation* Info){//update the sesnor with new information
-	sensorInfo->dirtLevel = Info->dirtLevel;
+SensorInformation OurSensor::setInfo(SensorInformation& Info){//update the sesnor with new information
+	sensorInfo->dirtLevel = Info.dirtLevel;
 	for (size_t i = 0; i < 4; ++i) {
-		sensorInfo->isWall[i] = Info->isWall[i];
+		sensorInfo->isWall[i] = Info.isWall[i];
 	}
 }
 
@@ -43,4 +43,9 @@ SensorInformation OurSensor::setInfo(SensorInformation* Info){//update the sesno
 
 SensorInformation OurSensor::sense() const{
 	return *this->sensorInfo;
+}
+
+void OurSensor::setPos(Position& pos){
+	sensorPos->col = pos.col;
+	sensorPos->row = pos.row;
 }
