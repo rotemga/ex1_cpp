@@ -10,10 +10,15 @@ struct SensorInformation {
 	bool isWall[4]; //index 0 is east, 1 is west, 2 is south, 3 is north
 };
 
+struct Position {
+	int row;
+	int col;
+};
 
 
 class AbstractSensor
 {
+	Position* sensorPos;
 	SensorInformation* sensorInfo;
 public:
 	AbstractSensor();
@@ -25,4 +30,5 @@ public:
 	char* ToString(const Direction direct);
 	bool directionIsLegal(const Direction direct);//return true if the direction is legal
 };
+
 
