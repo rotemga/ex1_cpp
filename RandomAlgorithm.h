@@ -6,10 +6,14 @@
 using namespace std;
 
 #include "AbstractAlgorithm.h"
+#include "OurSensor.h"
+#include <string>
+#include <map>
+#include <stdlib.h> 
 
 class RandomAlgorithm : public  AbstractAlgorithm {
 
-	OurSensor thisSensor;
+	OurSensor* thisSensor;
 	map<string, int> thisConfig;
 
 public:
@@ -20,10 +24,13 @@ public:
 	RandomAlgorithm(const RandomAlgorithm&) = delete;
 	RandomAlgorithm& operator=(const RandomAlgorithm&) = delete;
 
-	virtual void setSensor(const AbstractSensor& sensor);
-	virtual void setConfiguration(map<string, int> config);
-	virtual Direction step();
-	virtual void aboutToFinish(int stepsTillFinishing);
+	virtual void setSensor(const AbstractSensor& sensor) override;
+	virtual void setConfiguration(map<string, int> config) override;
+	virtual Direction step() override;
+	virtual void aboutToFinish(int stepsTillFinishing) override;
+
+	char* ToString(const Direction direct);
+	bool directionIsLegal(const Direction direct);
 
 };
 
