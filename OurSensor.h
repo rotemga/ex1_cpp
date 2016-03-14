@@ -25,9 +25,8 @@ public:
 	OurSensor& operator=(const OurSensor&);// '=' operator
 	char* ToString(const Direction direct);
 	bool directionIsLegal(const Direction direct);//return true if the direction is legal
-	virtual SensorInformation sense() const;
+	virtual SensorInformation sense() const override;
 	virtual void setInfo(SensorInformation& Info);
 	//void setPos(Position& pos);
 };
-
 
