@@ -10,6 +10,7 @@ using namespace std;
 #include <string>
 #include <map>
 #include <stdlib.h> 
+#include <set>
 
 class RandomAlgorithm : public  AbstractAlgorithm {
 
@@ -31,6 +32,7 @@ public:
 
 	char* ToString(const Direction direct);
 	bool directionIsLegal(const Direction direct);
+	void checkLegalDirection(set<int> s);
 
 };
 
