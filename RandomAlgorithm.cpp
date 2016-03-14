@@ -15,18 +15,32 @@ void RandomAlgorithm::setSensor(const AbstractSensor& sensor){
 }
 
 void RandomAlgorithm::setConfiguration(map<string, int> config){
-	thisConfig = config;//********to fix, assignment of strings not good!!!
+	thisConfig = config;
+
+	/*map<string, int>::iterator it;
+
+	for (it = config.begin(); it != config.end(); it++)
+	{
+		thisConfig[it->first] = it->second;
+	
+	}*/
 
 }
 Direction RandomAlgorithm::step(){
 	Direction direct;
-	while (1){
+	set<int> s;
+	checkLegalDirection(s);
+	int randIndex = rand() % s.size();
+	return static_cast<Direction>(randIndex);
+
+
+	/*while (1){
 		int randIndex = rand() % 5; // randIndex in the range 0 to 4
 		direct = static_cast<Direction>(randIndex);
 		if (directionIsLegal(direct))
 			break;
 	}
-	return direct;
+	return direct;*/
 }
 
 
@@ -60,5 +74,18 @@ bool RandomAlgorithm::directionIsLegal(const Direction direct){
 	case Direction::Stay:		return (info.dirtLevel > 0);
 	default:					return false;
 	}
+
+}
+
+//index 0 is east, 1 is west, 2 is south, 3 is north, 4 is stay
+
+void RandomAlgorithm::checkLegalDirection(set<int> s){
+	SensorInformation info = thisSensor->sense();
+	for (int i = 0; i < 4; ++i){
+		if (info.isWall[i])
+			s.insert(i);
+	}
+	if (info.dirtLevel > 0)
+		s.insert(4);
 
 }
