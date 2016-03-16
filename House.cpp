@@ -1,6 +1,7 @@
 #include "House.h"
 #include <fstream>
 #include <iostream>
+#include "SensorInformation.h"
 using namespace std;
 House::House() :
 C(0), R(0), matrix(NULL) {
@@ -65,4 +66,19 @@ int House::sumDirt() const {
 			if (matrix[i][j] >= '1' && matrix[i][j] <= '9')
 				sum += (int)matrix[i][j];
 	return sum;
+}
+
+//index 0 is east, 1 is west, 2 is south, 3 is north
+void House::getInfo(Point& currPoint, SensorInformation& info) const {
+	int x = currPoint.x;
+	int y = currPoint.y;
+	info.dirtLevel = getMatrix()[x][y];
+	info.isWall[0] = 
+		(y == getR() - 1) ? 
+		true : getMatrix()[x][y + 1] == 'W';
+	info.isWall[1] = (y == 0) ? true : getMatrix()[x][y - 1] == 'W';
+	info.isWall[2] = (x == 0) ? true : getMatrix()[x - 1][y] == 'W';
+	info.isWall[3] =
+		(x == getC() - 1) ?
+		true : getMatrix()[x + 1][y] == 'W';
 }
