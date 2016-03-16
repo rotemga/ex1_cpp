@@ -46,10 +46,10 @@ void Simulator::updatePointByDirection(Point& point, Direction direction) {
 */
 
 void Simulator::createScore(int num_steps, int pos_in_comeptition, bool is_back_docking, int dirt_collected, Score *score){
-	score->setNumSteps = num_steps;
-	score->isIsBackInDocking = is_back_docking;
-	score->setDirtCollected = dirt_collected;
-	score->setPosition = pos_in_comeptition;
+	score->setNumSteps(num_steps);
+	score->setIsBackInDocking(is_back_docking);
+	score->setDirtCollected(dirt_collected);
+	score->setPosition(pos_in_comeptition);
 }
 
 
@@ -59,7 +59,6 @@ void Simulator::run() {
 	}*/
 	vector <Robot*> robots;
 	Score score;
-	Robot* robot;
 	Battery* battery = new Battery(config.at("BatteryCapacity"), config.at("BatterConsumptionRate"), config.at("BatteryRachargeRate"));
 	int pos_in_competition = 1, num_steps = 0, Steps = config.at("MaxSteps");
 	
@@ -69,7 +68,7 @@ void Simulator::run() {
 
 
 	int time = 0;
-	Point* point;
+	Point* point = new Point(0,0);
 	for (vector<House*>::size_type i = 0; i != houses.size(); i++) {
 		if (!(houses[i]->findDockingStation(*point))){
 			cout << "Illegal house: there is no docking station!" << endl;
@@ -81,17 +80,17 @@ void Simulator::run() {
 			continue;
 		}
 		for (vector<AbstractAlgorithm*>::size_type j = 0; j != algorithms.size(); j++){
-			robot = new Robot(houses[i], algorithms[j], point, battery);
+			Robot* robot = new Robot(houses[i], algorithms[j], point, battery);
 			robots.push_back(robot);
 		}
 		while (Steps > 0){
 			for (vector<Robot*>::size_type k = 0; k != algorithms.size(); k++){
-				robot[k].runRobot();
-				if ((robot[k].isHouseClean) && (robot[k].areWeInDocking)){//robot win
+				robots[k]->runRobot();
+				if ((robots[k]->isHouseClean()) && (robots[k]->areWeInDocking())){//robot win
 					Steps = config.at("MaxStepsAfterWinner") + 1;
-					robot[k].setCanRun(false);
-					createScore(num_steps, pos_in_competition, true, robot[k].DirtCollected(), &score);
-					robot[k].setScore(score);
+					robots[k]->setCanRun(false);
+					createScore(num_steps, pos_in_competition, true, robots[k]->DirtCollected(), &score);
+					robots[k]->setScore(score);
 					if (pos_in_competition < 4)
 						pos_in_competition++;
 				}
@@ -102,9 +101,9 @@ void Simulator::run() {
 		}
 
 		for (vector<Robot*>::size_type k = 0; k != algorithms.size(); k++){
-			if (robot[k].isCanRun){
+			if (robots[k]->isCanRun()){
 				pos_in_competition = 10;
-				createScore(num_steps, pos_in_competition, robot[k].areWeInDocking, robot[k].DirtCollected(), &score);
+				createScore(num_steps, pos_in_competition, robots[k]->areWeInDocking(), robots[k]->DirtCollected(), &score);
 
 
 			}
@@ -114,7 +113,6 @@ void Simulator::run() {
 
 
 }
-
 
 
 
