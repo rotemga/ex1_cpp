@@ -104,6 +104,8 @@ void Simulator::run() {
 			if (robots[k]->isCanRun()){
 				pos_in_competition = 10;
 				createScore(num_steps, pos_in_competition, robots[k]->areWeInDocking(), robots[k]->DirtCollected(), &score);
+				robots[k]->setScore(score);
+
 
 
 			}
