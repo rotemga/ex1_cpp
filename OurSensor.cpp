@@ -1,9 +1,9 @@
 #include "OurSensor.h"
 
 
-OurSensor::OurSensor()
+OurSensor::OurSensor(House *house, Point* point) : thisHouse(house), currPoint(point)
 {
-
+	getInfoFromPoint();
 }
 
 
@@ -38,4 +38,15 @@ void OurSensor::setInfo(SensorInformation& Info){//update the sesnor with new in
 SensorInformation OurSensor::sense() const{
 	return *this->sensorInfo;
 }
+
+SensorInformation OurSensor::getInfoFromPoint(){
+	//SensorInformation tmp;
+	thisHouse->getInfo(*currPoint, *sensorInfo);
+	//setInfo(tmp);
+}
+
+
+
+
+
 
