@@ -10,22 +10,27 @@
 #include "AbstractAlgorithm.h"
 #include "AbstractSensor.h"
 #include "OurSensor.h"
+#include "Robot.h"
+#include "Battery.h"
 using namespace std;
 
 class Simulator {
-	House* house;
-	AbstractAlgorithm* algorithm;
+	vector <House*> houses;
+	vector <AbstractAlgorithm*> algorithms;
 	map<string, int> config;
 	vector<Score> results;
-	void updateBattery(int x, int y, int& batteryState);
-	void updateHouse(int x, int y);
-	void updatePointByDirection(Point& point, Direction direction);
+
+	//void updatePointByDirection(Point& point, Direction direction);
 public:
-	void getInfo(int x, int y, SensorInformation& info) const;
 	void run();
 	void fillHouses(const string& location);
+	void Simulator::setInputHouses(vector<House*> input);
+	void Simulator::setInputConfig(map<string, int> input_config);
+	void Simulator::setInputAlgo(vector <AbstractAlgorithm*> input_algorithms);
 	Simulator();
 	virtual ~Simulator();
+
 };
 
 #endif /* SIMULATOR_H_ */
+
