@@ -1,3 +1,5 @@
+#pragma once
+
 
 #ifndef HOUSE_H_
 #define HOUSE_H_
@@ -28,6 +30,8 @@ public:
 	void fillHouseData(string& filename);
 	void putWallsOnSides();
 	int sumDirt() const;
+	void getInfo(point& currPoint, SensorInformation& info) const;
+
 
 	int getC() const {
 		return C;
