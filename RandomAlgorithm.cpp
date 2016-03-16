@@ -1,40 +1,90 @@
-#pragma once
+#include "RandomAlgorithm.h"
+
+RandomAlgorithm::RandomAlgorithm()
+{
+}
 
 
-#ifndef RANDOMALGORITHM_H_
-#define RANDOMALGORITHM_H_
-using namespace std;
+RandomAlgorithm::~RandomAlgorithm()
+{
+}
 
-#include "AbstractAlgorithm.h"
-#include "OurSensor.h"
-#include <string>
-#include <map>
-#include <stdlib.h> 
-#include <set>
+void RandomAlgorithm::setSensor(const AbstractSensor& sensor){
+	thisSensor->setInfo(sensor.sense());
 
-class RandomAlgorithm : public  AbstractAlgorithm {
+}
 
-	OurSensor* thisSensor;
-	map<string, int> thisConfig;
+void RandomAlgorithm::setConfiguration(map<string, int> config){
+	thisConfig = config;
 
-public:
-	RandomAlgorithm();
-	virtual ~RandomAlgorithm();
+	/*map<string, int>::iterator it;
 
-	//Blocking Copy and Assignment
-	RandomAlgorithm(const RandomAlgorithm&) = delete;
-	RandomAlgorithm& operator=(const RandomAlgorithm&) = delete;
+	for (it = config.begin(); it != config.end(); it++)
+	{
+		thisConfig[it->first] = it->second;
+	
+	}*/
 
-	virtual void setSensor(const AbstractSensor& sensor) override;
-	virtual void setConfiguration(map<string, int> config) override;
-	virtual Direction step() override;
-	virtual void aboutToFinish(int stepsTillFinishing) override;
+}
+Direction RandomAlgorithm::step(){
+	set<int> s;
+	checkLegalDirection(s);
+	int randIndex = rand() % s.size();
+	return static_cast<Direction>(randIndex);
 
-	char* ToString(const Direction direct);
-	bool directionIsLegal(const Direction direct);
-	void checkLegalDirection(set<int> s);
 
-};
+	/*while (1){
+		int randIndex = rand() % 5; // randIndex in the range 0 to 4
+		direct = static_cast<Direction>(randIndex);
+		if (directionIsLegal(direct))
+			break;
+	}
+	return direct;*/
+}
 
-#endif /* RANDOMALGORITHM_H_ */
 
+void RandomAlgorithm::aboutToFinish(int stepsTillFinishing){
+
+}
+
+char* RandomAlgorithm::ToString(const Direction direct){
+	switch (direct)
+	{
+	case Direction::East:		return "East";
+	case Direction::West:		return "West";
+	case Direction::South:		return "South";
+	case Direction::North:		return "North";
+	case Direction::Stay:		return "Stay";
+	default:					return "Unknown";
+	}
+}
+
+//return true if the direction is legal.
+//i.e. the direction is not lead to wall, or if the direction is stay, there is dust in the current location.
+//index 0 is east, 1 is west, 2 is south, 3 is north
+bool RandomAlgorithm::directionIsLegal(const Direction direct){
+	SensorInformation info = thisSensor->sense();
+	switch (direct)
+	{
+	case Direction::East:		return !(info.isWall[0]);
+	case Direction::West:		return !(info.isWall[1]);
+	case Direction::South:		return !(info.isWall[2]);
+	case Direction::North:		return !(info.isWall[3]);
+	case Direction::Stay:		return (info.dirtLevel > 0);
+	default:					return false;
+	}
+
+}
+
+//index 0 is east, 1 is west, 2 is south, 3 is north, 4 is stay
+
+void RandomAlgorithm::checkLegalDirection(set<int> s){
+	SensorInformation info = thisSensor->sense();
+	for (int i = 0; i < 4; ++i){
+		if (info.isWall[i])
+			s.insert(i);
+	}
+	if (info.dirtLevel > 0)
+		s.insert(4);
+
+}
