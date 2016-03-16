@@ -1,6 +1,8 @@
 
 
 
+
+
 #include "Simulator.h"
 
 Simulator::Simulator() :
@@ -13,20 +15,17 @@ config({ { "MaxSteps", 1200 }, { "MaxStepsAfterWinner", 200 }, {
 Simulator::~Simulator() {
 }
 
-void Simulator::updateHouse(int xlocation, int ylocation) {
-	if (house->currentValue(xlocation, ylocation) != '0')
-		house->getMatrix()[xlocation][ylocation]--;
+void Simulator::setInputHouses(vector<House*> input_houses){
+	houses = input_houses;
 }
-void Simulator::updateBattery(int x, int y, int& batteryState) {
-	if (house->getMatrix()[x][y] != 'D')
-		batteryState -= config.at("BatteryConsumptionRate");
-	else {
-		int newLevel = batteryState + config.at("BatteryRachargeRate");
-		batteryState =
-			(newLevel > config.at("BatteryCapacity")) ?
-			config.at("BatteryCapacity") : newLevel;
-	}
+void Simulator::setInputConfig(map<string, int> input_config){
+	config = input_config;
 }
+void Simulator::setInputAlgo(vector <AbstractAlgorithm*> input_algorithms){
+	algorithms = input_algorithms;
+}
+
+/*
 void Simulator::updatePointByDirection(Point& point, Direction direction) {
 	switch (direction) {
 	case Direction::East:
@@ -46,46 +45,51 @@ void Simulator::updatePointByDirection(Point& point, Direction direction) {
 	default:;
 	}
 }
+*/
 
-//index 0 is east, 1 is west, 2 is south, 3 is north
-void Simulator::getInfo(int x, int y, SensorInformation& info) const {
-	info.dirtLevel = house->getMatrix()[x][y];
-	info.isWall[0] =
-		(y == house->getR() - 1) ?
-		true : house->getMatrix()[x][y + 1] == 'W';
-	info.isWall[1] = (y == 0) ? true : house->getMatrix()[x][y - 1] == 'W';
-	info.isWall[2] = (x == 0) ? true : house->getMatrix()[x - 1][y] == 'W';
-	info.isWall[3] =
-		(x == house->getC() - 1) ?
-		true : house->getMatrix()[x + 1][y] == 'W';
-}
 
 void Simulator::run() {
+	/*for (vector<AbstractAlgorithm*>::iterator it = algorithms.begin(); it != algorithms.end(); ++it) {
+		it->setConfiguration(config);
+	}*/
+	vector <Robot*> robots;
+	Robot* robot;
+	Battery* battery = new Battery(config.at("BatteryCapacity"), config.at("BatterConsumptionRate"), config.at("BatteryRachargeRate"));
+	int Steps = config.at("MaxSteps");
+	
+	for (vector<AbstractAlgorithm*>::size_type i = 0; i != algorithms.size(); i++) {
+		algorithms[i]->setConfiguration(config);
+	}
+
+
 	int time = 0;
-	algorithm->setConfiguration(config);
 	Point point;
-	if (!house->findDockingStation(point)){
-		cout << "there is no docking station!" << endl;
-		exit(1);
-	}
-	house->putWallsOnSides();
-	if (!house->findDockingStation(point)){
-		cout << "there is no docking station: it overrided" << endl;
-		exit(1);
-	}
-	SensorInformation dockInfo;
-	getInfo(point.x, point.y, dockInfo);
-	OurSensor sensor(&dockInfo);
-	int batteryState = config.at("BatteryCapacity");
-	while (time < config.at("MaxSteps")) {
-		updateHouse(point.x, point.y);
-		updateBattery(point.x, point.y, batteryState);
-		Direction direction = algorithm->step();
-		updatePointByDirection(point, direction);
-		time++;
-		getInfo(point.x, point.y, dockInfo);
-		sensor.setInfo(dockInfo);
+	for (vector<House*>::size_type i = 0; i != houses.size(); i++) {
+		if (!(houses[i]->findDockingStation(point))){
+			cout << "Illegal house: there is no docking station!" << endl;
+			continue;
+		}
+		houses[i]->putWallsOnSides();
+		if (!houses[i]->findDockingStation(point)){
+			cout << "Illegal house: the docking station overrided by external wall" << endl;
+			continue;
+		}
+		for (vector<AbstractAlgorithm*>::size_type j = 0; j != algorithms.size(); j++){
+			robot = new Robot(houses[i], algorithms[j], &point, battery);
+			robots.push_back(robot);
+		}
+		while (Steps > 0){
+			for (vector<Robot*>::size_type k = 0; k != algorithms.size(); k++){
+				robot[k].runRobot();
+				//if robotWin
+				//Steps = config.at("MaxStepsAfterWinner");
+			}
+			Steps--;
+		}
 
 	}
+
+
 }
+
 
