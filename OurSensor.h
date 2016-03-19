@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef OURSENSOR_H_
 #define OURSENSOR_H_
 
@@ -9,21 +7,20 @@
 
 class OurSensor : public AbstractSensor
 {
-	SensorInformation* sensorInfo;
+	SensorInformation sensorInfo;
 	House *thisHouse;
 	Point *currPoint;
 public:
 
-	/*OurSensor(SensorInformation *docking) : sensorInfo(docking){
-
-	}*/
 	OurSensor(House *house, Point* point);
+	OurSensor();
 	~OurSensor();
 	OurSensor(const OurSensor&);//copy c'tor
 	OurSensor& operator=(const OurSensor&);// '=' operator
 	virtual SensorInformation sense() const override;
-	virtual void setInfo(SensorInformation& Info);
-	SensorInformation OurSensor::getInfoFromPoint();
+	virtual void setInfo(const SensorInformation& Info);
+	void getInfoFromPoint();
+	void getInfoFromPoint(House* house, Point* point);
 };
 
 

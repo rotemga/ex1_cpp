@@ -7,6 +7,7 @@ Robot::Robot(House *house, AbstractAlgorithm *algo, Point* docking,
 	score = *new Score();
 	score.setSumDirtInHouse(house->sumDirt());
 	canRun = true;
+	algo->setSensor(*sensor);
 }
 
 Robot::~Robot() {
@@ -15,22 +16,34 @@ Robot::~Robot() {
 
 void Robot::runRobot() {
 	if (canRun) {
-		updateHouse(*position);
+		position->print();
+		if (updateHouse(*position))
+			score.setDirtCollected(score.getDirtCollected() + 1);
 		updateBattery(*position, *battery);
+		if (battery->isEmpry()) {
+			canRun = false;
+			score.setPosition(10);
+			return;
+		}
+		algo->setSensor(*sensor);
+
 		Direction direction = algo->step(); //should check if direction is legal
 		position->move(direction);
+		if (crashedToWall(*position)) {
+			canRun = false;
+			return;
+		}
 		sensor->getInfoFromPoint(house, position);
 		score.setNumSteps(score.getNumSteps() + 1);
 	}
 }
 
-void Robot::updateHouse(const Point& point) {
-	switch (house->findPointState(point)) {
-	case DIRTY:
+bool Robot::updateHouse(const Point& point) {
+	if (house->findPointState(point) == DIRTY) {
 		house->cleanDirtyPoint(point);
-		break;
-	deafult:;
+		return true;
 	}
+	return false;
 }
 void Robot::updateBattery(Point& point, Battery& battery) {
 	switch (house->findPointState(point)) {
@@ -39,6 +52,13 @@ void Robot::updateBattery(Point& point, Battery& battery) {
 		break;
 	default:
 		battery.reduce();
+	}
+}
+
+void Robot::updatePositionDirt(Point& point){
+	int dirt = house->currentValue(point.getX(), point.getY());
+	if (dirt > 0){
+		house->cleanDirtyPoint(point);
 	}
 }
 
@@ -52,6 +72,22 @@ bool Robot::areWeInDocking() const {
 int Robot::DirtCollected(){
 	return (score.getSumDirtInHouse() - house->sumDirt());
 }
+
+void Robot::printHouse(){
+	string* matrix = house->getMatrix();
+	cout << "Printing house from instance into standard output" << endl;
+	for (int i = 0; i < house->getR(); ++i)
+	{
+		for (int j = 0; j < house->getC(); ++j)
+		{
+			cout << matrix[i][j];
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+
 
 //void Robot::updatePointByDirection(Point& point, Direction direction) {
 //	switch (direction) {
@@ -72,4 +108,3 @@ int Robot::DirtCollected(){
 //	default:;
 //	}
 //}
-

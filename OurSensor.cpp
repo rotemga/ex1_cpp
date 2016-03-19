@@ -6,7 +6,9 @@ OurSensor::OurSensor(House *house, Point* point) : thisHouse(house), currPoint(p
 	getInfoFromPoint();
 }
 
-
+OurSensor::OurSensor()
+{
+}
 OurSensor::~OurSensor()
 {
 }
@@ -18,7 +20,7 @@ OurSensor::OurSensor(const OurSensor& sensor2) {//copy c'tor
 
 OurSensor& OurSensor::operator=(const OurSensor& sensor2) {// '=' operator
 	if (this != &sensor2) {
-		setInfo(*sensor2.sensorInfo);
+		setInfo(sensor2.sensorInfo);
 	}
 	return *this;
 }
@@ -26,27 +28,24 @@ OurSensor& OurSensor::operator=(const OurSensor& sensor2) {// '=' operator
 
 
 
-void OurSensor::setInfo(SensorInformation& Info){//update the sesnor with new information
-	sensorInfo->dirtLevel = Info.dirtLevel;
+void OurSensor::setInfo(const SensorInformation& Info){//update the sesnor with new information
+	sensorInfo.dirtLevel = Info.dirtLevel;
 	for (size_t i = 0; i < 4; ++i) {
-		sensorInfo->isWall[i] = Info.isWall[i];
+		sensorInfo.isWall[i] = Info.isWall[i];
 	}
 }
 
 
 
 SensorInformation OurSensor::sense() const{
-	return *this->sensorInfo;
+	return this->sensorInfo;
 }
 
-SensorInformation OurSensor::getInfoFromPoint(){
+void OurSensor::getInfoFromPoint(){
 	//SensorInformation tmp;
-	thisHouse->getInfo(*currPoint, *sensorInfo);
+	thisHouse->getInfo(*currPoint, sensorInfo);
 	//setInfo(tmp);
 }
-
-
-
-
-
-
+void OurSensor::getInfoFromPoint(House* house, Point* point) {
+	house->getInfo(*point, sensorInfo);
+}

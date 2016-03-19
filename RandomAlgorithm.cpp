@@ -2,6 +2,7 @@
 
 RandomAlgorithm::RandomAlgorithm()
 {
+	thisSensor = new OurSensor();
 }
 
 
@@ -10,8 +11,8 @@ RandomAlgorithm::~RandomAlgorithm()
 }
 
 void RandomAlgorithm::setSensor(const AbstractSensor& sensor){
-	thisSensor->setInfo(sensor.sense());
-
+	SensorInformation a = sensor.sense();
+	thisSensor->setInfo(a);
 }
 
 void RandomAlgorithm::setConfiguration(map<string, int> config){
@@ -30,10 +31,13 @@ Direction RandomAlgorithm::step(){
 	set<int> s;
 	checkLegalDirection(s);
 	int randIndex = rand() % s.size();
-	return static_cast<Direction>(randIndex);
+	set<int>::iterator it = s.begin();
+	advance(it, randIndex);
+	int stepIndex = *it;
+	return static_cast<Direction>(stepIndex);
 
-
-	/*while (1){
+	/*Direction direct;
+	while (1){
 		int randIndex = rand() % 5; // randIndex in the range 0 to 4
 		direct = static_cast<Direction>(randIndex);
 		if (directionIsLegal(direct))
@@ -47,7 +51,7 @@ void RandomAlgorithm::aboutToFinish(int stepsTillFinishing){
 
 }
 
-char* RandomAlgorithm::ToString(const Direction direct){
+string RandomAlgorithm::ToString(const Direction direct){
 	switch (direct)
 	{
 	case Direction::East:		return "East";
@@ -58,6 +62,8 @@ char* RandomAlgorithm::ToString(const Direction direct){
 	default:					return "Unknown";
 	}
 }
+
+
 
 //return true if the direction is legal.
 //i.e. the direction is not lead to wall, or if the direction is stay, there is dust in the current location.
@@ -70,7 +76,7 @@ bool RandomAlgorithm::directionIsLegal(const Direction direct){
 	case Direction::West:		return !(info.isWall[1]);
 	case Direction::South:		return !(info.isWall[2]);
 	case Direction::North:		return !(info.isWall[3]);
-	case Direction::Stay:		return (info.dirtLevel > 0);
+	case Direction::Stay:		return true; /*(info.dirtLevel > 0)*/
 	default:					return false;
 	}
 
@@ -78,13 +84,13 @@ bool RandomAlgorithm::directionIsLegal(const Direction direct){
 
 //index 0 is east, 1 is west, 2 is south, 3 is north, 4 is stay
 
-void RandomAlgorithm::checkLegalDirection(set<int> s){
+void RandomAlgorithm::checkLegalDirection(set<int>& s){
 	SensorInformation info = thisSensor->sense();
 	for (int i = 0; i < 4; ++i){
-		if (info.isWall[i])
+		if (!(info.isWall[i]))
 			s.insert(i);
 	}
-	if (info.dirtLevel > 0)
-		s.insert(4);
+	//if (info.dirtLevel > 0)
+	s.insert(4);
 
 }

@@ -10,6 +10,8 @@ class Battery {
 public:
 	Battery(int capacity, int conRate, int rachRate);
 	virtual ~Battery();
+	Battery(const Battery&);//copy c'tor
+	Battery& operator=(const Battery&);// '=' operator
 
 
 	bool isEmpry();

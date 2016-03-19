@@ -23,12 +23,14 @@ public:
 	~Robot();
 
 	void updateBattery(Point& point, Battery& battery);
-	void updateHouse(const Point& point);
+	bool updateHouse(const Point& point);
+	void updatePositionDirt(Point& point);
 	//	void updatePointByDirection(Point& point, Direction direction);
 	void runRobot();
 	bool isHouseClean() const;
 	bool areWeInDocking() const;
 	int DirtCollected();
+	void printHouse();
 
 	bool isCanRun() const {
 		return canRun;
@@ -44,6 +46,9 @@ public:
 
 	void setScore(const Score& score) {
 		this->score = score;
+	}
+	bool crashedToWall(const Point& point) {
+		return house->findPointState(point) == WALL;
 	}
 };
 #endif ROBOT_H_

@@ -30,9 +30,9 @@ public:
 	virtual Direction step() override;
 	virtual void aboutToFinish(int stepsTillFinishing) override;
 
-	char* ToString(const Direction direct);
 	bool directionIsLegal(const Direction direct);
-	void checkLegalDirection(set<int> s);
+	void checkLegalDirection(set<int>& s);
+	string ToString(const Direction direct);
 
 };
 

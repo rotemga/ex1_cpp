@@ -19,7 +19,7 @@ class Simulator {
 	vector <House*> houses;
 	vector <AbstractAlgorithm*> algorithms;
 	map<string, int> config;
-	vector<Score> results;
+	//vector<Score> results;
 
 	//void updatePointByDirection(Point& point, Direction direction);
 public:
@@ -29,7 +29,9 @@ public:
 	void setInputConfig(map<string, int> input_config);
 	void setInputAlgo(vector <AbstractAlgorithm*> input_algorithms);
 	void createScore(int num_steps, int pos_in_comeptition, bool is_back_docking, int dirt_collected, Score *score);
-	Simulator();
+	bool hasEnding(std::string const &fullString, std::string const &ending);
+	Simulator(vector <House*>, vector <AbstractAlgorithm*>);
+	Simulator(vector <House*>, vector <AbstractAlgorithm*>, map<string,int>);
 	virtual ~Simulator();
 
 };
