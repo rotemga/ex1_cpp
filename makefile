@@ -7,10 +7,10 @@ all: $(TARGET)
 
 
 $(TARGET): $(O_FILES)
-	g++ -o $(TARGET) $(O_FILES) -std=c++11 -O2 -Wall -pedantic -pthread
+	g++ -o $(TARGET) $(O_FILES) -std=c++11 -O2 -Wall -pedantic -pthread -lboost_filesystem
 
 main.o: main.c House.h Simulator.h RandomAlgorithm.h SimpleIniFileParser.h
-	g++ -cpp $(CFLAGS) $*.cpp 
+	g++ -cpp $(CFLAGS) $*.cpp -lboost_filesystem
 
 Battery.o: Battery.cpp Battery.h
 	g++ -cpp $(CFLAGS) $*.cpp 
