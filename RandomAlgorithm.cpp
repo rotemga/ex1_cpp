@@ -1,5 +1,6 @@
 #include "RandomAlgorithm.h"
 
+
 RandomAlgorithm::RandomAlgorithm()
 {
 	thisSensor = new OurSensor();
@@ -30,6 +31,7 @@ void RandomAlgorithm::setConfiguration(map<string, int> config){
 Direction RandomAlgorithm::step(){
 	set<int> s;
 	checkLegalDirection(s);
+	//srand(time(NULL));
 	int randIndex = rand() % s.size();
 	set<int>::iterator it = s.begin();
 	advance(it, randIndex);

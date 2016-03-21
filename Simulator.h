@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <time.h>
+#include <stdlib.h> 
 #include "House.h"
 #include "Score.h"
 #include "AbstractAlgorithm.h"

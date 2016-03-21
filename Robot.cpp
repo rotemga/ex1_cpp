@@ -6,17 +6,19 @@ Robot::Robot(House *house, AbstractAlgorithm *algo, Point* docking,
 	sensor = new OurSensor(house, docking);
 	score = *new Score();
 	score.setSumDirtInHouse(house->sumDirt());
+	score.setPosition(10);
 	canRun = true;
 	algo->setSensor(*sensor);
 }
 
 Robot::~Robot() {
-	//sensor = delete;
+	delete sensor;
+	//delete score;
 }
 
 void Robot::runRobot() {
 	if (canRun) {
-		position->print();
+		//position->print();
 		if (updateHouse(*position))
 			score.setDirtCollected(score.getDirtCollected() + 1);
 		updateBattery(*position, *battery);

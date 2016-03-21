@@ -11,6 +11,7 @@ using namespace std;
 #include <map>
 #include <stdlib.h> 
 #include <set>
+#include <time.h>
 
 class RandomAlgorithm : public  AbstractAlgorithm {
 
