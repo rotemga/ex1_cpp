@@ -1,6 +1,6 @@
 TARGET := ex1
 CFLAGS := -std=c++11 -O2 -Wall -pedantic -pthread
-O_FILES:= main.o Battery.o House.o OurSensor.o Point.o RandomAlgorithm.o Robot.o Score.o SimpleIniFileParser.o Simulator.o 
+O_FILES:= main.o Battery.o House.o OurSensor.o Point.o RandomAlgorithm.o Robot.o Score.o SimpleIniFileParser.o Simulator.o FuncForMain.o
 
 
 all: $(TARGET)
@@ -9,7 +9,10 @@ all: $(TARGET)
 $(TARGET): $(O_FILES)
 	g++ -o $(TARGET) $(O_FILES) -std=c++11 -O2 -Wall -pedantic -pthread
 
-main.o: main.cpp House.h Simulator.h RandomAlgorithm.h SimpleIniFileParser.h
+main.o: main.cpp FuncForMain.h
+	g++ -c $(CFLAGS) $*.cpp 
+	
+FuncForMain.o: FuncForMain.cpp FuncForMain.h House.h Simulator.h RandomAlgorithm.h SimpleIniFileParser.h
 	g++ -c $(CFLAGS) $*.cpp 
 
 Battery.o: Battery.cpp Battery.h
