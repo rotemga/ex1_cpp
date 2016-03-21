@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	map<string, int> config;
 
 
-	if (argc > 1){ //there is command-line arguments
+	if (argc > 1){ //there are command-line arguments
 		string* input = new string[argc - 1];
 		for (int i = 1; i < argc; ++i){
 
@@ -42,8 +42,8 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	else if (!input_house || !input_config){ //at least one of the arguments was missing
-		//create vector that containe all files in the corrent directory
+	else if (!input_house || !input_config){ //at least one of the arguments were missing
+		//create vector that containe all files in the current directory
 		fs::path full_path_dir(fs::current_path());
 
 		fs::directory_iterator end_iter;
