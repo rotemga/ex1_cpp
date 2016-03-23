@@ -16,6 +16,7 @@ class Robot
 	Battery* battery;
 	Score score;
 	bool canRun;
+	bool brokedDown;
 
 public:
 
@@ -34,6 +35,9 @@ public:
 
 	bool isCanRun() const {
 		return canRun;
+	}
+	bool isBrokedDown() const {
+		return brokedDown;
 	}
 
 	void setCanRun(bool canRun) {

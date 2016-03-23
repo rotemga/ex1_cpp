@@ -11,7 +11,7 @@ Score::~Score() {
 
 int Score::calcResult() {
 	return std::max(0,
-		(2000 - (position - 1) * 50 - (winnerNumSteps - numSteps) * 10
+		(2000 - (position - 1) * 50 + (winnerNumSteps - numSteps) * 10
 		- (sumDirtInHouse - dirtCollected) * 3
 		+ (isBackInDocking ? 50 : -200)));
 }

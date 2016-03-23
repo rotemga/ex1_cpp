@@ -8,6 +8,7 @@ Robot::Robot(House *house, AbstractAlgorithm *algo, Point* docking,
 	score.setSumDirtInHouse(house->sumDirt());
 	score.setPosition(10);
 	canRun = true;
+	brokedDown = false;
 	algo->setSensor(*sensor);
 }
 
@@ -24,6 +25,7 @@ void Robot::runRobot() {
 		updateBattery(*position, *battery);
 		if (battery->isEmpry()) {
 			canRun = false;
+			brokedDown = true;
 			score.setPosition(10);
 			return;
 		}
@@ -33,6 +35,7 @@ void Robot::runRobot() {
 		position->move(direction);
 		if (crashedToWall(*position)) {
 			canRun = false;
+			brokedDown = true;
 			return;
 		}
 		sensor->getInfoFromPoint(house, position);

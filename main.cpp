@@ -8,7 +8,7 @@
 int main(int argc, char* argv[]) {
 	srand(time(0));
 
-	bool input_house = false, input_config = false;
+	bool input_house = true, input_config = true;
 	string tmp = argv[0];
 	string config_fileName;
 	vector<string> houses_fileName;
@@ -26,7 +26,8 @@ int main(int argc, char* argv[]) {
 				fs::path p(argv[i]);
 				fs::path full_p = fs::complete(p); // complete == absolute
 				config_fileName = full_p.string();
-				input_config = true;
+				input_config = false;
+
 
 
 			}
@@ -34,7 +35,8 @@ int main(int argc, char* argv[]) {
 				fs::path p(argv[i]);
 				fs::path full_p = fs::complete(p); // complete == absolute
 				houses_fileName.push_back(full_p.string());
-				input_house = true;
+				input_house = false;
+
 
 
 			}
@@ -42,7 +44,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	else if (!input_house || !input_config){ //at least one of the arguments were missing
+	if ((input_house) || (input_config)){ //at least one of the arguments were missing
 		//create vector that containe all files in the current directory
 		fs::path full_path_dir(fs::current_path());
 
@@ -63,10 +65,10 @@ int main(int argc, char* argv[]) {
 
 	}
 	for (vector<string>::size_type j = 0; j != fileName_currDir.size(); j++){
-		if ((hasEnding(fileName_currDir[j], ".ini") && (!input_config))){
+		if ((hasEnding(fileName_currDir[j], ".ini") && (input_config))){
 			config_fileName = fileName_currDir[j];
 		}
-		else if ((hasEnding(fileName_currDir[j], ".house") && (!input_house))){
+		else if ((hasEnding(fileName_currDir[j], ".house") && (input_house))){
 			houses_fileName.push_back(fileName_currDir[j]);
 		}
 	}
