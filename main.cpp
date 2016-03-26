@@ -6,7 +6,7 @@
 
 
 int main(int argc, char* argv[]) {
-	srand(time(0));
+	srand(static_cast<unsigned int>(time(NULL)));
 
 	bool input_house = true, input_config = true;
 	string tmp = argv[0];
@@ -19,7 +19,6 @@ int main(int argc, char* argv[]) {
 
 
 	if (argc > 1){ //there are command-line arguments
-		string* input = new string[argc - 1];
 		for (int i = 1; i < argc; ++i){
 
 			if (hasEnding(argv[i], ".ini")){
@@ -86,7 +85,17 @@ int main(int argc, char* argv[]) {
 		algos.push_back(randomAlgo);
 
 		Simulator sim(houses, algos, config);
+		//for (int i = 0; i < 100; i++){
 		sim.run();
+		//}
+
+		for (auto it = houses.begin(); it != houses.end(); ++it){
+			delete *it;
+		}
+		houses.clear();
+		delete randomAlgo;
+		algos.clear();
+
 
 		return 0;
 

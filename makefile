@@ -1,4 +1,4 @@
-TARGET := ex1
+TARGET := simulator
 CFLAGS := -std=c++11 -O2 -Wall -pedantic -pthread
 O_FILES:= main.o Battery.o House.o OurSensor.o Point.o RandomAlgorithm.o Robot.o Score.o SimpleIniFileParser.o Simulator.o FuncForMain.o
 
@@ -7,13 +7,13 @@ all: $(TARGET)
 
 
 $(TARGET): $(O_FILES)
-	g++ -o $(TARGET) $(O_FILES) -std=c++11 -O2 -Wall -pedantic -pthread
+	g++ -o $(TARGET) $(O_FILES) -std=c++11 -O2 -Wall -pedantic -pthread -L/usr/local/boost/boost_1_50_0/stage/lib -lboost_filesystem -lboost_system
 
 main.o: main.cpp FuncForMain.h
-	g++ -c $(CFLAGS) $*.cpp 
+	g++ -c $(CFLAGS) $*.cpp -L/usr/local/boost/boost_1_50_0/stage/lib -lboost_filesystem -lboost_system
 	
 FuncForMain.o: FuncForMain.cpp FuncForMain.h House.h Simulator.h RandomAlgorithm.h SimpleIniFileParser.h
-	g++ -c $(CFLAGS) $*.cpp 
+	g++ -c $(CFLAGS) $*.cpp -L/usr/local/boost/boost_1_50_0/stage/lib -lboost_filesystem -lboost_system
 
 Battery.o: Battery.cpp Battery.h
 	g++ -c $(CFLAGS) $*.cpp 

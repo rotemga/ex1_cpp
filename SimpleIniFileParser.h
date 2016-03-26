@@ -56,4 +56,4 @@ private:
 
 
 
-#endif SIMPLEINIFILEPARSER_H_
+#endif /*SIMPLEINIFILEPARSER_H_*/

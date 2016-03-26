@@ -4,7 +4,7 @@ Robot::Robot(House *house, AbstractAlgorithm *algo, Point* docking,
 	Battery* battery) :
 	house(house), algo(algo), position(docking), battery(battery) {
 	sensor = new OurSensor(house, docking);
-	score = *new Score();
+	//score;// = *new Score();
 	score.setSumDirtInHouse(house->sumDirt());
 	score.setPosition(10);
 	canRun = true;
@@ -14,6 +14,7 @@ Robot::Robot(House *house, AbstractAlgorithm *algo, Point* docking,
 
 Robot::~Robot() {
 	delete sensor;
+	delete battery;
 	//delete score;
 }
 
@@ -76,6 +77,9 @@ bool Robot::areWeInDocking() const {
 
 int Robot::DirtCollected(){
 	return (score.getSumDirtInHouse() - house->sumDirt());
+}
+int Robot::sumDirtInHouse(){
+	return(house->sumDirt());
 }
 
 void Robot::printHouse(){

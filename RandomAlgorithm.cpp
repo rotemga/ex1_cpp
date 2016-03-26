@@ -9,6 +9,7 @@ RandomAlgorithm::RandomAlgorithm()
 
 RandomAlgorithm::~RandomAlgorithm()
 {
+	delete thisSensor;
 }
 
 void RandomAlgorithm::setSensor(const AbstractSensor& sensor){

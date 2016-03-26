@@ -31,7 +31,7 @@ public:
 	void setInputHouses(vector<House*> input);
 	void setInputConfig(map<string, int> input_config);
 	void setInputAlgo(vector <AbstractAlgorithm*> input_algorithms);
-	void createScore(int winner_num_stepsint, int num_steps, int pos_in_comeptition, bool is_back_docking, int dirt_collected, Score *score);
+	void createScore(int winner_num_stepsint, int num_steps, int pos_in_comeptition, bool is_back_docking, int dirt_collected,  int sum_Dirth_House, Score *score);
 	Simulator(vector <House*>, vector <AbstractAlgorithm*>);
 	Simulator(vector <House*>, vector <AbstractAlgorithm*>, map<string,int>);
 	bool allRobotsFinished(vector <Robot*> robots);

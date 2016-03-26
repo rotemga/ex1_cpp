@@ -1,13 +1,14 @@
 #include "House.h"
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include "SensorInformation.h"
 using namespace std;
 enum { rows = 4, cols = 6 }; // this is an example for an hard coded house...
 char house1[rows][cols + 1] = {
 	"WWWWWW",
-	"WD263W",
-	"W1154W",
+	"WD268W",
+	"W8854W",
 	"WWWWWW"
 };
 
@@ -17,8 +18,6 @@ R(R), C(C), shortDes(sho), longDes(lng){
 	matrix = new string[R];
 	for (int i = 0; i<R; i++)
 		matrix[i] = house1[i];
-	// TODO Auto-generated constructor stub
-
 }
 House::House() {
 }
@@ -62,38 +61,46 @@ bool House::isClean() const {
 	return true;
 }
 
-bool House::findDockingStation(Point& point) const {
-
+int House::findDockingStation(Point& point) const {
+	int counter = 0;
 	for (int i = 0; i < R; i++)
 		for (int j = 0; j < C; j++)
 			if (matrix[i][j] == 'D') {
 				point.setPoint(i, j);
-				return true;
+				counter++;
 			}
-	return false;
+	return counter;
 }
 
 char& House::findDirtLevel(int x, int y) const {
 	return matrix[x][y];
 }
 //if the house is llegal return true, else false.
+
 bool House::checkIfHouseLegal(Point& point){
-	if (!findDockingStation(point)){
+	completeMissingBlanks();
+	eliminateStrangeChar();
+	if (findDockingStation(point) == 0){
 		cout << "Illegal house: there is no docking station!" << endl;
 		return false;
 	}
 	putWallsOnSides();
-	if (!findDockingStation(point)){
+	int numberOfDockingStations = findDockingStation(point);
+	if (numberOfDockingStations == 0){
 		cout << "Illegal house: the docking station overrided by external wall" << endl;
 		return false;
 	}
-	SensorInformation info;
+	else if (numberOfDockingStations > 1) {
+		cout << "There is more than one docking station" << endl;
+		return false;
+	}
+/*	SensorInformation info;
 	getInfo(point, info);
 	if ((info.isWall[0]) && (info.isWall[1]) && (info.isWall[2]) && (info.isWall[3])){
 		cout << "Illegal house: the docking station surrounded by walls, the robot can't get out" << endl;
 		return false;
 
-	}
+	}*/
 	return true;
 }
 
@@ -107,10 +114,36 @@ void House::fillHouseData(string& filename) {
 	fin.ignore(); //skip newline and go the begining of matrix
 	matrix = new string[R];
 	for (int i = 0; i < R; ++i) {
-		std::getline(fin, matrix[i]);
+		matrix[i].resize(C, 'X');
+		string buffer;
+		std::getline(fin, buffer); // http://stackoverflow.com/questions/2251433/checking-for-eof-in-stringgetline
+		int numOfCharsToFill = std::min(buffer.size(), matrix[i].size());
+		for (int j = 0; j < numOfCharsToFill; j++)
+			matrix[i][j] = buffer[j];
 	}
 }
 
+void House::completeMissingBlanks() {
+	for (int i = 0; i < R; i++) {
+		if ((int)matrix[i].size() < C)
+			for (int j = matrix[i].size(); j < C; j++)
+			{
+				//cout << "matrix size " << matrix[i].size() << endl;
+				//cout << "matrix " << matrix[i] << endl;
+				matrix[i][j] = ' ';
+			}
+
+	}
+}
+
+void House::eliminateStrangeChar() {
+	for (int i = 0; i < R; i++)
+		for (int j = 0; j < C; j++) {
+			char ch = matrix[i][j];
+			if (ch != 'W' && ch != 'D' && (ch < '1' || ch > '9'))
+				matrix[i][j] = ' ';
+		}
+}
 
 void House::putWallsOnSides() {
 	for (int i = 0; i < C; ++i) {

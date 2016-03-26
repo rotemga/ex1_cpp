@@ -31,6 +31,7 @@ public:
 	bool isHouseClean() const;
 	bool areWeInDocking() const;
 	int DirtCollected();
+	int sumDirtInHouse();
 	void printHouse();
 
 	bool isCanRun() const {
@@ -55,4 +56,4 @@ public:
 		return house->findPointState(point) == WALL;
 	}
 };
-#endif ROBOT_H_
+#endif /*ROBOT_H_*/

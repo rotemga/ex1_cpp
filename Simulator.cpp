@@ -33,12 +33,13 @@ void Simulator::setInputAlgo(vector <AbstractAlgorithm*> input_algorithms){
 
 
 
-void Simulator::createScore(int winner_num_stepsint, int num_steps, int pos_in_comeptition, bool is_back_docking, int dirt_collected, Score *score){
+void Simulator::createScore(int winner_num_stepsint, int num_steps, int pos_in_comeptition, bool is_back_docking, int dirt_collected, int sum_Dirth_House,Score *score){
 	score->setWinnerNumSteps(winner_num_stepsint);
 	score->setNumSteps(num_steps);
 	score->setIsBackInDocking(is_back_docking);
 	score->setDirtCollected(dirt_collected);
 	score->setPosition(pos_in_comeptition);
+	score->setSumDirtInHouse(sum_Dirth_House);
 }
 
 
@@ -46,7 +47,7 @@ void Simulator::createScore(int winner_num_stepsint, int num_steps, int pos_in_c
 
 
 bool Simulator::allRobotsFinished(vector <Robot*> robots){
-	int cnt = 0;
+	unsigned int cnt = 0;
 	for (vector<Robot*>::size_type k = 0; k != robots.size(); k++){
 		if (!(robots[k]->isCanRun()))
 			cnt++;
@@ -73,10 +74,9 @@ void Simulator::run() {
 	}
 
 
-	int time = 0;
 	Point* point = new Point(-1, -1);
 	for (vector<House*>::size_type i = 0; i != houses.size(); i++) {
-		int Steps = config.at("MaxSteps"), pos_in_competition = 1, actual_position_in_copmetition = 0;
+		int Steps = config.at("MaxSteps"), pos_in_competition = 1, actual_position_in_copmetition = 1;
 		int simulation_steps = 0, winner_num_steps = 0, num_of_wins_this_iter = 0;
 		if (!(houses[i]->checkIfHouseLegal(*point)))
 			continue;
@@ -99,7 +99,9 @@ void Simulator::run() {
 					}
 					num_of_wins_this_iter++;
 					pos_in_competition = min(4, actual_position_in_copmetition);
-					createScore(winner_num_steps, simulation_steps, pos_in_competition, true, robots[k]->DirtCollected(), &score);
+					createScore(winner_num_steps, simulation_steps, pos_in_competition, true, robots[k]->DirtCollected(),0, &score);
+					robots[k]->setCanRun(false);
+					robots[k]->setScore(score);
 
 				}
 
@@ -125,7 +127,7 @@ void Simulator::run() {
 			//or:
 			//the robot  didn't finish cleaning the house and it can run
 			if ((robots[k]->isCanRun() || robots[k]->isBrokedDown())){
-				createScore(winner_num_steps, simulation_steps, 10, robots[k]->areWeInDocking(), robots[k]->DirtCollected(), &score);
+				createScore(winner_num_steps, simulation_steps, 10, robots[k]->areWeInDocking(), robots[k]->DirtCollected(), robots[k]->sumDirtInHouse(), &score);
 				robots[k]->setScore(score);
 				cout <<"the robot didnt win:"  <<score.calcResult() << endl;
 
@@ -134,14 +136,24 @@ void Simulator::run() {
 			if (robots[k]->isBrokedDown())
 				cout << "battery empty" << endl;
 		}
-
+		for (vector<Robot*>::size_type k = 0; k != robots.size(); k++){
+			if (robotWin(robots[k])){//robot win
+				cout << "the robot win" << endl;
+			}
+			robots[k]->printHouse();
+			Score s = robots[k]->getScore();
+			cout << s.calcResult() << endl;
+		}
 
 	}
-	for (vector<Robot*>::size_type k = 0; k != robots.size(); k++){
-		robots[k]->printHouse();
-		Score s = robots[k]->getScore();
-		cout << s.calcResult() << endl;
+	delete point;
+	for (auto it = robots.begin(); it != robots.end(); ++it){
+		//delete battery
+		delete *it;
 	}
+
+	robots.clear();
+
 
 
 }
