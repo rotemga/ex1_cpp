@@ -1,9 +1,9 @@
+$(TARGET)
 TARGET := simulator
 CFLAGS := -std=c++11 -O2 -Wall -pedantic -pthread
 O_FILES:= main.o Battery.o House.o OurSensor.o Point.o RandomAlgorithm.o Robot.o Score.o SimpleIniFileParser.o Simulator.o FuncForMain.o
 
 
-all: $(TARGET)
 
 
 $(TARGET): $(O_FILES)
